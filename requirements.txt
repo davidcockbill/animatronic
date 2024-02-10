@@ -1,2 +1,4 @@
 overrides
 adafruit-circuitpython-servokit
+imutils
+numpy

@@ -17,7 +17,6 @@ class Actions:
         done = self.action.pulse()
         if done:
             self.action = self._get_action()
-        Actions._pulse_delay()
 
     def shutdown(self):
         self.head.reset()
@@ -36,10 +35,6 @@ class Actions:
         if ms_timestamp() > self.blink_timestamp:
             self.eyes.blink()
             self.blink_timestamp = Actions._blink_timestamp()
-
-    @staticmethod
-    def _pulse_delay():
-        sleep_ms(0.00001)
 
     def _get_action(self):
         population=[
@@ -109,6 +104,7 @@ class LookRight(Action):
         ]
         super().__init__('Look Right', head, eyes, steps)
 
+
 class LookUp(Action):
     def __init__(self, head, eyes):
         steps=[
@@ -117,6 +113,7 @@ class LookUp(Action):
             [head.face_level, eyes.look_ahead, eyes.open_eyes], 
         ]
         super().__init__('Look Up', head, eyes, steps)
+
 
 class Awake(Action):
     def __init__(self, head, eyes):
@@ -157,6 +154,7 @@ class Sleep(Action):
 
     def wait(self):
         sleep_ms(5000)
+
 
 class CrossEyed(Action):
     def __init__(self, head, eyes, blink=False):

@@ -33,6 +33,11 @@ class Head:
     def fast(self):
         [servo.fast() for servo in self.smoothed_servos]
 
+    def set(self, x, y):
+        self.rotation_servo.position(x)
+        self.left_servo.position(y)
+        self.right_servo.position(y)
+
     def face_ahead(self):
         print(f'Face ahead')
         self.face_middle()
@@ -96,16 +101,15 @@ if __name__ == '__main__':
     # run(head.face_right)
     # run(head.face_ahead)
 
-    run(head.slow)
-    run(head.face_left)
-    run(head.face_down)
-    run(head.face_middle)
-    run(head.face_right)
-    run(head.face_level)
+    # run(head.slow)
+    # run(head.face_left)
+    # run(head.face_down)
+    # run(head.face_middle)
+    # run(head.face_right)
+    # run(head.face_level)
 
     run(head.face_up)
-    run(head.face_middle)
-    run(head.face_left)
-    run(head.face_level)
+    run(head.face_down)
+
 
     run(head.face_ahead)

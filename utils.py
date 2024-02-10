@@ -12,3 +12,6 @@ def sleep_ms(ms):
 
 def ms_timestamp():
     return round(time.monotonic() * 1000)
+
+def ns_timestamp():
+    return time.monotonic_ns()
