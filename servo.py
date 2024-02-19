@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 from overrides import override
+from numpy import interp
+
 
 SLOW_STEPS = 0.002
 FAST_STEPS = 0.006
@@ -22,8 +24,8 @@ class Servo:
         self._set_fraction(self.mid_fraction)
 
     def position(self, position):
-        midpoint_offset = position / 2
-        fraction = self.mid_fraction - midpoint_offset if self.reversed else self.mid_fraction + midpoint_offset
+        mapped_range = [self.max_fraction, self.min_fraction] if self.reversed else [self.min_fraction, self.max_fraction]
+        fraction = round(interp(position, [-1.0, 1.0], mapped_range), 4)
         self._set_fraction(fraction)
 
     def set_pulse_width_range(self, min_pulse, max_pulse):

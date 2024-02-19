@@ -31,6 +31,12 @@ class Eyes:
     def reset(self):
         [servo.reset() for servo in self.all_servos]
 
+    def set(self, x, y):
+        self.left_eye_x.position(x)
+        self.right_eye_x.position(x)
+        self.left_eye_y.position(y)
+        self.right_eye_y.position(y)
+
     def pulse(self):
         return all([servo.pulse() for servo in self.smoothed_servos])
 
