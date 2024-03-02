@@ -11,7 +11,7 @@ class FaceDetector:
         self.cascade_frontal = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.cascade_profile = cv2.CascadeClassifier('haarcascade_profileface.xml')
         self.capture = VideoStream(usePiCamera=True).start()
-        self.grayscale = False
+        self.grayscale = True
         self.scale_factor = 1.3
         self.min_neighbors = 5
         sleep_ms(500)

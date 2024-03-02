@@ -31,9 +31,11 @@ class Eyes:
     def reset(self):
         [servo.reset() for servo in self.all_servos]
 
-    def set(self, x, y):
+    def set_x(self, x):
         self.left_eye_x.position(x)
         self.right_eye_x.position(x)
+
+    def set_y(self, y):
         self.left_eye_y.position(y)
         self.right_eye_y.position(y)
 

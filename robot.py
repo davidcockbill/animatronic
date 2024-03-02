@@ -20,8 +20,8 @@ class Robot:
     def run(self):
         while True:
             try:
-                # self.run_actions()
-                self.tracker.pulse()
+                self.run_actions()
+                # self.tracker.pulse()
             except KeyboardInterrupt:
                 print(f'\nShutting down')
                 self.tracker.shutdown()
@@ -30,7 +30,7 @@ class Robot:
 
     def run_actions(self):
         self.actions.pulse()
-        # self._pulse_delay()
+        self._pulse_delay()
 
     @staticmethod
     def _pulse_delay():

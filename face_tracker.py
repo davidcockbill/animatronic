@@ -32,19 +32,25 @@ class FaceTracker:
                     self.face_tracking = True
                 self.last_face_detected = current_ms
                 x, y = face
-                self.eyes.set(x, y)
+                # if abs(x) < 0.5:
+                #     self.head.set_x(x/2)
+                # self.eyes.set_x(x)
+
+                # if abs(y) > 0.5:
+                #     self.head.set_y(y/2)
+                # self.eyes.set_y(y)
 
             duration = current_ms - self.last_face_detected
             if duration > 2000:
                 if self.face_tracking:
                     print(f'No Face')
                     self.face_tracking = False
-        self.head.pulse()
-        self.eyes.pulse()
+        # self.head.pulse()
+        # self.eyes.pulse()
 
     @staticmethod
     def _blink_timestamp():
-        return ms_timestamp() + randrange(1000, 8000)
+        return ms_timestamp() + randrange(5000, 15000)
 
     def _blink(self):
         if ms_timestamp() > self.blink_timestamp:

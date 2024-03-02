@@ -33,8 +33,10 @@ class Head:
     def fast(self):
         [servo.fast() for servo in self.smoothed_servos]
 
-    def set(self, x, y):
+    def set_x(self, x):
         self.rotation_servo.position(x)
+
+    def set_y(self, y):
         self.left_servo.position(y)
         self.right_servo.position(y)
 
