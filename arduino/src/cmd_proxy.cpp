@@ -122,6 +122,10 @@ void CmdProxy::process_command(byte spi_buffer[])
                 break;
         }
     }
+    else
+    {
+        Serial.println("Protocol Error");
+    }
 }
 
 
