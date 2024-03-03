@@ -8,17 +8,19 @@
 #define LEFT_EYE_Y_CMD 1
 #define RIGHT_EYE_X_CMD 2
 #define RIGHT_EYE_Y_CMD 3
-#define HEAD_ROTATION_CMD 4
-#define HEAD_RIGHT_CMD 5
-#define HEAD_LEFT_CMD 6
+#define EYE_LIDS_CMD 4
+#define HEAD_ROTATION_CMD 5
+#define HEAD_RIGHT_CMD 6
+#define HEAD_LEFT_CMD 7
 
-volatile uint16_t CmdProxy::left_eye_x_position = 0;
-volatile uint16_t CmdProxy::left_eye_y_position = 0;
-volatile uint16_t CmdProxy::right_eye_x_position= 0;
-volatile uint16_t CmdProxy::right_eye_y_position = 0;
-volatile uint16_t CmdProxy::head_rotation_position = 0;
-volatile uint16_t CmdProxy::head_left_position = 0;
-volatile uint16_t CmdProxy::head_right_position = 0;
+volatile uint16_t CmdProxy::left_eye_x_position = 1000;
+volatile uint16_t CmdProxy::left_eye_y_position = 1000;
+volatile uint16_t CmdProxy::right_eye_x_position= 1000;
+volatile uint16_t CmdProxy::right_eye_y_position = 1000;
+volatile uint16_t CmdProxy::eye_lids_position = 1000;
+volatile uint16_t CmdProxy::head_rotation_position = 1000;
+volatile uint16_t CmdProxy::head_left_position = 1000;
+volatile uint16_t CmdProxy::head_right_position = 1000;
 
 CmdProxy::CmdProxy()
 {
@@ -61,6 +63,11 @@ uint16_t CmdProxy::get_right_eye_y_position()
     return right_eye_y_position;
 }
 
+uint16_t CmdProxy::get_eye_lids_position()
+{
+    return eye_lids_position;
+}
+
 uint16_t CmdProxy::get_head_rotation_position()
 {
     return head_rotation_position;
@@ -100,6 +107,9 @@ void CmdProxy::process_command(byte spi_buffer[])
                 break;
             case RIGHT_EYE_Y_CMD:
                 right_eye_y_position = value;
+                break;
+            case EYE_LIDS_CMD:
+                eye_lids_position = value;
                 break;
             case HEAD_ROTATION_CMD:
                 head_rotation_position = value;

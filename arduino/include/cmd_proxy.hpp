@@ -15,6 +15,7 @@ public:
     static uint16_t get_left_eye_y_position();
     static uint16_t get_right_eye_x_position();
     static uint16_t get_right_eye_y_position();
+    static uint16_t get_eye_lids_position();
     static uint16_t get_head_rotation_position();
     static uint16_t get_head_left_position();
     static uint16_t get_head_right_position();
@@ -26,6 +27,7 @@ private:
     volatile static uint16_t left_eye_y_position;
     volatile static uint16_t right_eye_x_position;
     volatile static uint16_t right_eye_y_position;
+    volatile static uint16_t eye_lids_position;
     volatile static uint16_t head_rotation_position;
     volatile static uint16_t head_left_position;
     volatile static uint16_t head_right_position;
