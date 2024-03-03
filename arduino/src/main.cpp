@@ -13,8 +13,8 @@ Servo right_eye_x_servo = Servo(pwm, 6, 1450, 450, FREQUENCY);
 Servo right_eye_y_servo = Servo(pwm, 7, 1550, 400, FREQUENCY, true);
 Servo eye_lids_servo = Servo(pwm, 8, 1400, 800, FREQUENCY);
 Servo head_rotation_servo = Servo(pwm, 9, 1500, 500, FREQUENCY);
-Servo head_right_servo = Servo(pwm, 10, 1500, 1650, FREQUENCY, true);
-Servo head_left_servo = Servo(pwm, 11, 1500, 1650, FREQUENCY);
+Servo head_right_servo = Servo(pwm, 10, 1500, 1000, FREQUENCY);
+Servo head_left_servo = Servo(pwm, 11, 1500, 1000, FREQUENCY, true);
 
 Servo *servos[] = {
   &left_eye_x_servo,
@@ -80,5 +80,5 @@ void setup()
 void loop()
 {
     process_servos();
-    delay(0.1);
+    delayMicroseconds(10);
 }
