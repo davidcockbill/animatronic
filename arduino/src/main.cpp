@@ -62,6 +62,7 @@ void process_servos()
     left_eye_y_servo.set(CmdProxy::get_left_eye_y_position());
     right_eye_x_servo.set(CmdProxy::get_right_eye_x_position());
     right_eye_y_servo.set(CmdProxy::get_right_eye_y_position());
+    eye_lids_servo.set(CmdProxy::get_eye_lids_position());
     head_rotation_servo.set(CmdProxy::get_head_rotation_position());
     head_left_servo.set(CmdProxy::get_head_left_position());
     head_right_servo.set(CmdProxy::get_head_right_position());
