@@ -72,11 +72,11 @@ def main():
     proxy.set_right_eye_x(1000)
     proxy.set_right_eye_y(1000)
 
-    proxy.set_eye_lids(2000)
+    proxy.set_eye_lids(1000)
 
     proxy.set_head_rotation(1000)
     proxy.set_head_left(1000)
-    proxy.set_head_right(900)
+    proxy.set_head_right(1000)
     proxy.shutdown()
 
 
