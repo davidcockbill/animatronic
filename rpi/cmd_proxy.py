@@ -11,9 +11,10 @@ class CmdProxy:
     LEFT_EYE_Y_CMD = 1
     RIGHT_EYE_X_CMD = 2
     RIGHT_EYE_Y_CMD = 3
-    HEAD_ROTATION_CMD = 4
-    HEAD_RIGHT_CMD = 5
-    HEAD_LEFT_CMD = 6
+    EYE_LIDS_CMD = 4
+    HEAD_ROTATION_CMD = 5
+    HEAD_RIGHT_CMD = 6
+    HEAD_LEFT_CMD = 7
 
     def __init__(self):
         spi_bus = 0
@@ -30,16 +31,19 @@ class CmdProxy:
         self.spi.close()
 
     def set_left_eye_x(self, position):
-        self._send(CmdProxy.self.LEFT_EYE_X_CMD, position)
+        self._send(CmdProxy.LEFT_EYE_X_CMD, position)
 
     def set_left_eye_y(self, position):
         self._send(CmdProxy.LEFT_EYE_Y_CMD, position)
 
     def set_right_eye_x(self, position):
-        self._send(CmdProxy.self.RIGHT_EYE_X_CMD, position)
+        self._send(CmdProxy.RIGHT_EYE_X_CMD, position)
 
     def set_right_eye_y(self, position):
         self._send(CmdProxy.RIGHT_EYE_Y_CMD, position)
+
+    def set_eye_lids(self, position):
+        self._send(CmdProxy.EYE_LIDS_CMD, position)
 
     def set_head_rotation(self, position):
         self._send(CmdProxy.HEAD_ROTATION_CMD, position)
@@ -62,7 +66,17 @@ class CmdProxy:
 
 def main():
     proxy = CmdProxy()
-    proxy.set_left_eye_x(1024)
+    proxy.set_left_eye_x(1000)
+    proxy.set_left_eye_y(1000)
+
+    proxy.set_right_eye_x(1000)
+    proxy.set_right_eye_y(1000)
+
+    proxy.set_eye_lids(2000)
+
+    proxy.set_head_rotation(1000)
+    proxy.set_head_left(1000)
+    proxy.set_head_right(900)
     proxy.shutdown()
 
 
