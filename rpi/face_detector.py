@@ -43,10 +43,10 @@ class FaceDetector:
         return self.cascade_profile.detectMultiScale(frame, scaleFactor=self.scale_factor, minNeighbors=self.min_neighbors)
 
     def _scale_x(self, x):
-        return round(interp(x,[0,self.width],[1.0,-1.0]), 4)
+        return int(interp(x,[0,self.width],[2000,0]))
 
     def _scale_y(self, y):
-        return round(interp(y,[0,self.height],[1.0,-1.0]), 4)
+        return int(interp(y,[0,self.height],[2000,0]))
 
     def _get_face(self, faces):
         first_face = faces[0]

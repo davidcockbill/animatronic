@@ -21,7 +21,7 @@ class CmdProxy:
         spi_device = 0
         spi = spidev.SpiDev()
         spi.open(spi_bus, spi_device)
-        spi.max_speed_hz = 1000000
+        spi.max_speed_hz = 500000
         spi.mode = 0
 
         self.spi = spi
