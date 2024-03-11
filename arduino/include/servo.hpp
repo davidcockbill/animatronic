@@ -16,7 +16,8 @@ public:
 
 void centre();
 
-void set(uint16_t position, uint16_t min=0, uint16_t max=2000);
+void set(uint16_t position);
+void set(uint16_t position, uint16_t min, uint16_t max);
 
 boolean pulse();
 

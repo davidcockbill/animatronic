@@ -19,7 +19,9 @@ public:
     static uint16_t get_head_rotation_position();
     static uint16_t get_head_left_position();
     static uint16_t get_head_right_position();
-    
+
+    static void process_errors();
+    static void set_error_msg(const char *msg);
     static void process_command(byte spi_buffer[]);
 
 private:
@@ -31,6 +33,9 @@ private:
     volatile static uint16_t head_rotation_position;
     volatile static uint16_t head_left_position;
     volatile static uint16_t head_right_position;
+
+    static char error_msg[];
+    volatile static int errors;
 };
 
 #endif

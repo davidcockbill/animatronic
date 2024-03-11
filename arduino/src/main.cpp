@@ -58,6 +58,8 @@ boolean pulse()
 
 void process_servos()
 {
+    CmdProxy::process_errors();
+
     left_eye_x_servo.set(CmdProxy::get_left_eye_x_position());
     left_eye_y_servo.set(CmdProxy::get_left_eye_y_position());
     right_eye_x_servo.set(CmdProxy::get_right_eye_x_position());

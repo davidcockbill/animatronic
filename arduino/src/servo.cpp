@@ -22,10 +22,15 @@ Servo::Servo(
 
 void Servo::centre()
 {
-    set(0);
+    set(1000);
 }
 
-void Servo::set(uint16_t position, uint16_t min_position=0, uint16_t max_position=2000)
+void Servo::set(uint16_t position)
+{
+    set(position, 0, 2000);
+}
+
+void Servo::set(uint16_t position, uint16_t min_position, uint16_t max_position)
 {
     uint16_t steps = mReversed ?
         map(position, min_position, max_position, mMaxSteps, mMinSteps) :
