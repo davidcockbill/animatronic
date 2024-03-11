@@ -22,6 +22,10 @@ volatile uint16_t CmdProxy::head_rotation_position = 1000;
 volatile uint16_t CmdProxy::head_left_position = 1000;
 volatile uint16_t CmdProxy::head_right_position = 1000;
 
+char CmdProxy::error_msg[50] = "";
+volatile int CmdProxy::errors = 0;
+
+
 CmdProxy::CmdProxy()
 {
 }
@@ -83,6 +87,28 @@ uint16_t CmdProxy::get_head_right_position()
     return head_right_position;
 }
 
+void CmdProxy::process_errors()
+{
+    if (strlen(error_msg) != 0)
+    {
+        errors++;
+        Serial.print(error_msg);
+        Serial.print( "[");
+        Serial.print(errors);
+        Serial.println("]");
+
+        strcpy(error_msg, "");
+    }
+}
+
+void CmdProxy::set_error_msg(const char *msg)
+{
+    if (strlen(error_msg) == 0)
+    {
+        strncpy(error_msg, msg, sizeof(error_msg));
+    }
+}
+
 void CmdProxy::process_command(byte spi_buffer[])
 {
     int idx = 0;
@@ -122,6 +148,10 @@ void CmdProxy::process_command(byte spi_buffer[])
                 break;
         }
     }
+    else
+    {
+        set_error_msg("Protocol Marker error");
+    }
 }
 
 
@@ -131,12 +161,20 @@ ISR (SPI_STC_vect)
     static byte spi_buffer[5];
     static int max_bytes = sizeof(spi_buffer) / sizeof(byte);
 
-    spi_buffer[spi_buffer_idx] = SPDR;
-    ++spi_buffer_idx;
-
-    if (spi_buffer_idx == max_bytes)
+    byte data = SPDR;
+    if (spi_buffer_idx == 0 && data != PROTOCOL_START)
     {
-        CmdProxy::process_command(spi_buffer);
-        spi_buffer_idx = 0;
+        CmdProxy::set_error_msg("Protocol Start Marker error");
+    }
+    else
+    {
+        spi_buffer[spi_buffer_idx] = data;
+        ++spi_buffer_idx;
+
+        if (spi_buffer_idx == max_bytes)
+        {
+            CmdProxy::process_command(spi_buffer);
+            spi_buffer_idx = 0;
+        }
     }
 }
