@@ -161,6 +161,7 @@ ISR (SPI_STC_vect)
     static byte spi_buffer[5];
     static int max_bytes = sizeof(spi_buffer) / sizeof(byte);
 
+    noInterrupts();
     byte data = SPDR;
     if (spi_buffer_idx == 0 && data != PROTOCOL_START)
     {
@@ -177,4 +178,5 @@ ISR (SPI_STC_vect)
             spi_buffer_idx = 0;
         }
     }
+    interrupts();
 }
