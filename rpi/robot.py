@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import time
+from sound import Sound
 from cmd_proxy import CmdProxy
 from head import Head
 from eyes import Eyes
@@ -10,10 +11,11 @@ from utils import sleep_ms
 
 class Robot:
     def __init__(self):
+        self.sound = Sound()
         self.proxy = CmdProxy()
         self.head = Head(self.proxy)
         self.eyes = Eyes(self.proxy)
-        self.tracker = FaceTracker(self.head, self.eyes)
+        self.tracker = FaceTracker(self.sound, self.head, self.eyes)
         # self.actions = Actions(self.head, self.eyes)
         sleep_ms(500)
 
