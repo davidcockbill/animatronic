@@ -7,14 +7,14 @@
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-Servo left_eye_x_servo = Servo(pwm, 4, 1440, 450, FREQUENCY);
-Servo left_eye_y_servo = Servo(pwm, 5, 1600, 400, FREQUENCY);
-Servo right_eye_x_servo = Servo(pwm, 6, 1450, 450, FREQUENCY);
-Servo right_eye_y_servo = Servo(pwm, 7, 1550, 400, FREQUENCY, true);
-Servo eye_lids_servo = Servo(pwm, 8, 1400, 800, FREQUENCY);
-Servo head_rotation_servo = Servo(pwm, 9, 1500, 500, FREQUENCY);
-Servo head_right_servo = Servo(pwm, 10, 1500, 1000, FREQUENCY);
-Servo head_left_servo = Servo(pwm, 11, 1500, 1000, FREQUENCY, true);
+Servo left_eye_x_servo = Servo(pwm, 4, 1500, 990, FREQUENCY, true, false, true);
+Servo left_eye_y_servo = Servo(pwm, 5, 1500, 990, FREQUENCY, true, false);
+Servo right_eye_x_servo = Servo(pwm, 6, 1500, 990, FREQUENCY, true, false, true);
+Servo right_eye_y_servo = Servo(pwm, 7, 1500, 990, FREQUENCY, true, false, true);
+Servo eye_lids_servo = Servo(pwm, 8, 1400, 800, FREQUENCY, false, true);
+Servo head_rotation_servo = Servo(pwm, 9, 1500, 500, FREQUENCY, true, true);
+Servo head_right_servo = Servo(pwm, 10, 1500, 1000, FREQUENCY, true, true);
+Servo head_left_servo = Servo(pwm, 11, 1500, 1000, FREQUENCY, true, true, true);
 
 Servo *servos[] = {
   &left_eye_x_servo,
@@ -82,5 +82,4 @@ void setup()
 void loop()
 {
     process_servos();
-    delayMicroseconds(10);
 }

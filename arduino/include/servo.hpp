@@ -12,6 +12,8 @@ public:
         uint16_t midPulseWidth_us,
         uint16_t pulseWidthRange_us,
         uint16_t frequency_hz,
+        boolean smoothed=true,
+        boolean linear=true,
         boolean reversed = false);
 
 void centre();

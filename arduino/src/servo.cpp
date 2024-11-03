@@ -7,14 +7,16 @@ Servo::Servo(
     uint16_t midPulseWidth_us,
     uint16_t pulseWidthRange_us,
     uint16_t frequency_hz,
+    boolean smoothed,
+    boolean linear,
     boolean reversed):
         mServoDriver(servoDriver),
         mServoIdx(servoIdx),
         mMinSteps(getStepsForPulseWidth(midPulseWidth_us - (pulseWidthRange_us/2), frequency_hz)),
         mMaxSteps(getStepsForPulseWidth(midPulseWidth_us + (pulseWidthRange_us/2), frequency_hz)),
         mReversed(reversed),
-        mSmoothed(true),
-        mLinearMovement(true),
+        mSmoothed(smoothed),
+        mLinearMovement(linear),
         mDesiredSteps(getStepsForPulseWidth(midPulseWidth_us, frequency_hz)),
         mCurrentSteps(getStepsForPulseWidth(midPulseWidth_us, frequency_hz))
 {
