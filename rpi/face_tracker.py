@@ -4,10 +4,11 @@ from face_detector import FaceDetector
 from random import randrange
 from utils import ms_timestamp
 
-HEAD_SMOOTHER = 30
+HEAD_SMOOTHER = 100
 
 class FaceTracker:
-    def __init__(self, sound, head, eyes):
+    def __init__(self, led_panel, sound, head, eyes):
+        self.led_panel = led_panel
         self.sound = sound
         self.head = head
         self.eyes = eyes
@@ -29,14 +30,13 @@ class FaceTracker:
         if face is not None:
             self.last_face_detected = current_ms
             if not self.face_tracking:
-                print(f'Tracking Face')
-                self.sound.hello()
-                self.face_tracking = True
-                self.eyes.wide_eyes()
-                self.previous_x = 1000
-                self.previous_y = 1000
+                self._start_tracking()
             x, y = face
             # print(f'x={x}, y={y}')
+
+            lids_position = 1500 if (x > 1100) else 1000
+            self.eyes.set_lids_position(lids_position)
+
 
             if abs(self.previous_x - x) > HEAD_SMOOTHER:
                 self.head.set_x_position(x)
@@ -52,11 +52,23 @@ class FaceTracker:
         duration = current_ms - self.last_face_detected
         if duration > 2000:
             if self.face_tracking:
-                print(f'No Face')
-                self.face_tracking = False
-                self.head.face_ahead()
-                self.eyes.default_eyes()
+                self._stop_tracking()
 
+    def _start_tracking(self):
+        print(f'Tracking Face')
+        self.led_panel.blue(True)
+        self.sound.chirp()
+        self.face_tracking = True
+        self.eyes.wide_eyes()
+        self.previous_x = 1000
+        self.previous_y = 1000
+
+    def _stop_tracking(self):
+        print(f'No Face')
+        self.led_panel.blue(False)
+        self.face_tracking = False
+        self.head.face_ahead()
+        self.eyes.default_eyes()
 
     @staticmethod
     def _blink_timestamp():

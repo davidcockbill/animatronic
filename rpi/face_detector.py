@@ -4,12 +4,16 @@ import cv2
 from numpy import interp
 from utils import sleep_ms
 from imutils.video import VideoStream
+from pathlib import Path
 
+ROOT = Path(__file__).parents[0]
+FRONTAL_CLASSIFIER_FILE = f'{ROOT}/haarcascade_frontalface_default.xml'
+PROFILE_CLASSIFIER_FILE = f'{ROOT}/haarcascade_profileface.xml'
 
 class FaceDetector:
     def __init__(self):
-        self.cascade_frontal = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        self.cascade_profile = cv2.CascadeClassifier('haarcascade_profileface.xml')
+        self.cascade_frontal = cv2.CascadeClassifier(FRONTAL_CLASSIFIER_FILE)
+        self.cascade_profile = cv2.CascadeClassifier(PROFILE_CLASSIFIER_FILE)
         self.capture = VideoStream(usePiCamera=True).start()
         self.grayscale = True
         self.scale_factor = 1.3

@@ -17,6 +17,9 @@ class Eyes:
         self.proxy.set_left_eye_y(position)
         self.proxy.set_right_eye_y(position)
 
+    def set_lids_position(self, position):
+       self.proxy. set_eye_lids(position)
+
     def default_eyes(self):
         print(f'Defaulting ...')
         self.look_ahead()
@@ -69,7 +72,7 @@ class Eyes:
 
     def blink(self):
         self.close_eyes()
-        sleep_ms(200)
+        sleep_ms(100)
         self.open_eyes()
 
 

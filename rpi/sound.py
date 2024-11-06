@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import functools
 import RPi.GPIO as GPIO
 from utils import sleep_ms
  
@@ -13,11 +14,12 @@ class Sound:
         self.pwm = GPIO.PWM(self.pin, 100)
 
     def play(func):
-        def wrapper(self) :
+        @functools.wraps(func)
+        def wrap(self, *args, **kwargs):
             self.pwm.start(50)
-            func(self)
+            func(self, *args, **kwargs)
             self.pwm.stop()
-        return wrapper
+        return wrap
 
     @play
     def hello(self, delay=0.5):
@@ -36,11 +38,41 @@ class Sound:
             self.pwm.ChangeFrequency(frequency)
             frequency += 5
             sleep_ms(delay)
-        
+
+    @play
+    def chirp(self):
+        self.pwm.ChangeFrequency(900)
+        sleep_ms(50)
+        self.pwm.ChangeFrequency(1300)
+        sleep_ms(50)
+        self.pwm.ChangeFrequency(1700)
+        sleep_ms(50)
+
+    @play
+    def warble(self):
+        frequency = 1000
+        duration = 20
+        step = 30
+        for i in range(2):
+            self.pwm.ChangeFrequency(frequency)
+            sleep_ms(duration)
+            frequency += step
+            self.pwm.ChangeFrequency(frequency)
+            sleep_ms(duration)
+            frequency -= step
+            self.pwm.ChangeFrequency(frequency)
+            sleep_ms(duration)
+            frequency -= step
+            self.pwm.ChangeFrequency(frequency)
+            sleep_ms(duration)
+            frequency += step
+
 
 def main():
     sound = Sound()
-    sound.hello()
+    sound.warble()
+    sound.chirp()
+
 
 
 if __name__ == '__main__':
