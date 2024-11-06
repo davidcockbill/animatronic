@@ -36,9 +36,9 @@ class LedPanel:
 
 def main():
     panel = LedPanel()
-    panel.red(False)
+    panel.red(True)
     panel.green(True)
-    panel.blue(False)
+    panel.blue(True)
 
 
 if __name__ == '__main__':
