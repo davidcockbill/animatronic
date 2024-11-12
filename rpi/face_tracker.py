@@ -59,6 +59,7 @@ class FaceTracker:
 
     def _start_tracking(self):
         print(f'Tracking Face')
+        self.led_panel.stop()
         self.led_panel.green(True)
         self.sound.chirp()
         self.face_tracking = True
@@ -72,6 +73,7 @@ class FaceTracker:
         self.face_tracking = False
         self.head.face_ahead()
         self.eyes.default_eyes()
+        self.led_panel.scan()
 
     @staticmethod
     def _blink_timestamp():

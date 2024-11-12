@@ -32,6 +32,7 @@ class Robot:
                 if cpu_temperature < 70:
                     # self.run_actions()
                     self.tracker.pulse()
+                    self.led_panel.pulse()
                     # self._pulse_delay()
             except KeyboardInterrupt:
                 print(f'\nShutting down')
