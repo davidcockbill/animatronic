@@ -32,3 +32,15 @@ To check systemd logs if it does not start:
 ```
 journalctl -u robot.service
 ```
+
+## Overheating
+
+Temperature can be checked as follows:
+
+```
+cat /sys/class/thermal/thermal_zone0/temp
+```
+
+The Raspberry PI has an operating range up to 85C. It aparently throttles performance after this.
+Image processing is CPU intensive and if we run the OpenCV face detection in a tight loop it overheats quickly.
+The robot therefore seeks slowly, then switches up to a fast scan (for responsive behaviour) whilst a face is detected.
