@@ -67,12 +67,16 @@ class Sound:
             sleep_ms(duration)
             frequency += step
 
+    @play
+    def no(self):
+        self.pwm.ChangeFrequency(60)
+        sleep_ms(100)
+        self.pwm.ChangeFrequency(20)
+        sleep_ms(200)
 
 def main():
     sound = Sound()
-    sound.warble()
-    sound.chirp()
-
+    sound.no()
 
 
 if __name__ == '__main__':

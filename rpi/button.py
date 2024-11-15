@@ -12,9 +12,9 @@ class Button:
         GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(self.pin, GPIO.FALLING, callback=self.button_pressed, bouncetime=200)
 
-
     def button_pressed(self, channel):
         if channel == self.pin:
+            print('Button pushed')
             self.callback()
 
 def main():
