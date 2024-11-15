@@ -5,6 +5,7 @@ from random import randrange
 from utils import ms_timestamp
 
 HEAD_SMOOTHER = 100
+CHECK_TIME = 500
 
 class FaceTracker:
     def __init__(self, led_panel, sound, head, eyes):
@@ -13,6 +14,7 @@ class FaceTracker:
         self.head = head
         self.eyes = eyes
         self.detector = FaceDetector()
+        self.next_check_ms = 0
         self.last_face_detected = 0
         self.face_tracking = False
         self.blink_timestamp = self._blink_timestamp()
@@ -20,42 +22,46 @@ class FaceTracker:
         self.previous_x = 1000
         self.previous_y = 1000
 
+        self.led_panel.scan()
+
     def shutdown(self):
         self.detector.shutdown()
 
     def pulse(self):
         self._blink()
         current_ms = ms_timestamp()
-        face = self.detector.get_face()
-        if face is not None:
-            self.led_panel.blue(True)
-            self.last_face_detected = current_ms
-            if not self.face_tracking:
-                self._start_tracking()
-            x, y = face
-            # print(f'x={x}, y={y}')
+        if self.face_tracking or current_ms > self.next_check_ms:
+            self.next_check_ms = current_ms + CHECK_TIME
+            face = self.detector.get_face()
+            if face is not None:
+                self.led_panel.blue(True)
+                self.last_face_detected = current_ms
+                if not self.face_tracking:
+                    self._start_tracking()
+                x, y = face
+                # print(f'x={x}, y={y}')
 
-            lids_position = 1500 if (x > 1100) else 1000
-            self.eyes.set_lids_position(lids_position)
+                lids_position = 1500 if (x > 1100) else 1000
+                self.eyes.set_lids_position(lids_position)
 
 
-            if abs(self.previous_x - x) > HEAD_SMOOTHER:
-                self.head.set_x_position(x)
-            self.eyes.set_x_position(x)
+                if abs(self.previous_x - x) > HEAD_SMOOTHER:
+                    self.head.set_x_position(x)
+                self.eyes.set_x_position(x)
 
-            if abs(self.previous_y - y) > HEAD_SMOOTHER:
-                self.head.set_y_position(y)
-            self.eyes.set_y_position(y)
+                if abs(self.previous_y - y) > HEAD_SMOOTHER:
+                    self.head.set_y_position(y)
+                self.eyes.set_y_position(y)
 
-            self.previous_x = x
-            self.previous_y = y
-        else:
-            self.led_panel.blue(False)
+                self.previous_x = x
+                self.previous_y = y
+            else:
+                self.led_panel.blue(False)
 
-        duration = current_ms - self.last_face_detected
-        if duration > 2000:
-            if self.face_tracking:
-                self._stop_tracking()
+            duration = current_ms - self.last_face_detected
+            if duration > 2000:
+                if self.face_tracking:
+                    self._stop_tracking()
 
     def _start_tracking(self):
         print(f'Tracking Face')
