@@ -25,6 +25,8 @@ Systemd commands:
 systemctl start robot.service
 systemctl enable robot.service
 systemctl status robot.service
+systemctl stop robot.service
+systemctl disable robot.service
 ```
 
 To check systemd logs if it does not start: 

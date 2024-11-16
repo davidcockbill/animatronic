@@ -144,11 +144,9 @@ class Awake(Action):
 class Sleep(Action):
     def __init__(self, head, eyes, blink=False):
         steps=[
-            [head.slow],
             [head.face_down, eyes.close_eyes], 
             [self.wait], 
             [head.face_ahead, eyes.open_eyes], 
-            [head.fast],
         ]
         super().__init__('Sleep', head, eyes, steps)
 
@@ -159,11 +157,9 @@ class Sleep(Action):
 class CrossEyed(Action):
     def __init__(self, head, eyes, blink=False):
         steps=[
-            [eyes.slow],
             [head.face_ahead, eyes.cross_eyed], 
             [self.wait], 
             [head.face_ahead, eyes.look_ahead], 
-            [eyes.fast],
         ]
         super().__init__('Cross Eyed', head, eyes, steps)
 
@@ -174,7 +170,6 @@ class CrossEyed(Action):
 class Shifty(Action):
     def __init__(self, head, eyes):
         steps=[
-            [eyes.slow],
             [head.face_level], 
             [self.wait], 
             [eyes.look_left], 
@@ -182,7 +177,6 @@ class Shifty(Action):
             [eyes.look_right], 
             [self.wait], 
             [eyes.look_ahead], 
-            [eyes.fast], 
         ]
         super().__init__('Shifty', head, eyes, steps)
 
