@@ -74,6 +74,12 @@ class Sound:
         self.pwm.ChangeFrequency(20)
         sleep_ms(200)
 
+    @play
+    def raspberry(self):
+        self.pwm.ChangeFrequency(20)
+        sleep_ms(300)
+
+
 def main():
     sound = Sound()
     sound.no()
