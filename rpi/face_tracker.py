@@ -62,6 +62,7 @@ class FaceTracker:
             if duration > 2000:
                 if self.face_tracking:
                     self._stop_tracking()
+        return self.face_tracking
 
     def _start_tracking(self):
         print(f'Tracking Face')

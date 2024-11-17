@@ -20,7 +20,7 @@ class Robot:
         self.head = Head(self.proxy)
         self.eyes = Eyes(self.proxy)
         self.tracker = FaceTracker(self.led_panel, self.sound, self.head, self.eyes)
-        # self.actions = Actions(self.head, self.eyes)
+        self.actions = Actions(self.head, self.eyes, self.sound)
         sleep_ms(500)
 
     def run(self):
@@ -28,10 +28,10 @@ class Robot:
             try:
                 cpu_temperature = self._get_cpu_temperature()
                 if cpu_temperature < 80:
-                    # self.run_actions()
-                    self.tracker.pulse()
                     self.led_panel.pulse()
-                    # self._pulse_delay()
+                    tracking = self.tracker.pulse()
+                    if not tracking:
+                        self.run_actions()
                 else:
                     print(f'Overheating: {cpu_temperature:.2f}')
                     self.led_panel.stop()
@@ -49,7 +49,7 @@ class Robot:
     def shutdown(self):
         print(f'\nShutting down')
         self.tracker.shutdown()
-        # self.actions.shutdown()
+        self.actions.shutdown()
         self.led_panel.stop()
 
     def _button_pressed(self):

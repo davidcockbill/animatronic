@@ -14,6 +14,9 @@ class Actions:
         self.eyes = eyes
         self.sound = sound
         self.blink_timestamp = Actions._blink_timestamp()
+        self.reset()
+
+    def reset(self):
         self.action = self._get_action()
 
     def pulse(self):
