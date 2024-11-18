@@ -51,6 +51,14 @@ class LedPanel:
         ]
         self._animate()
 
+    def red_flash(self):
+        self.animation_idx = 0
+        self.animation = [
+            [(self.red, True), (self.green, False), (self.blue, False)],
+            [(self.red, False), (self.green, False), (self.blue, False)],
+        ]
+        self._animate()
+
     def stop(self):
         self.animation = []
         self.animation_idx = 0

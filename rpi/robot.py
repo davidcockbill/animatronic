@@ -22,13 +22,14 @@ class Robot:
         self.eyes = Eyes(self.proxy)
         self.tracker = FaceTracker(self.led_panel, self.sound, self.head, self.eyes)
         self.actions = Actions(self.head, self.eyes, self.sound)
+        self.led_panel.red_flash()
         sleep_ms(500)
 
     def run(self):
         while True:
             try:
                 if self.standby:
-                    sleep_ms(250)
+                    self.led_panel.pulse()
                 else:
                     cpu_temperature = self._get_cpu_temperature()
                     if cpu_temperature < 80:
@@ -53,8 +54,10 @@ class Robot:
 
     def _toggle_standby(self):
         if self.standby:
+            self.led_panel.scan()
             self.standby = False
         else:
+            self.led_panel.red_flash()
             self.standby = True
         print(f'Standby: {self.standby}')
 
