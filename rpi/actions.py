@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from utils import sleep_ms, ms_timestamp
+from utils import ms_timestamp
 from random import randrange, choices
 
 from sound import Sound
@@ -41,7 +41,7 @@ class Actions:
             LookRight(self.head, self.eyes, self.sound),
             LookUp(self.head, self.eyes, self.sound),
             LookDown(self.head, self.eyes, self.sound),
-            Sleep(self.head, self.eyes, self.sound),
+            # Sleep(self.head, self.eyes, self.sound),
             Shifty(self.head, self.eyes, self.sound),
             Tilt(self.head, self.eyes, self.sound),
             LookUp(self.head, self.eyes, self.sound),
@@ -59,34 +59,32 @@ class Action:
         self.head = head
         self.eyes = eyes
         self.sound = sound
-        self.action_idx = 0
+        self.step_idx = 0
         self.steps = steps
         self.blink = blink
-        self.next_ms = self._get_next_ms()
+        self.next_ms = self._get_next_ms(0)
 
     def pulse(self):
         done = False
         current_ms = ms_timestamp()
         if current_ms > self.next_ms:
             done = self._action()
-            self.next_ms = self._get_next_ms()
         return done
 
     def should_blink(self):
         return self.blink
     
-    def wait(self):
-        sleep_ms(100)
-    
     @staticmethod
-    def _get_next_ms():
-        return ms_timestamp() + 250
+    def _get_next_ms(await_time):
+        return ms_timestamp() + await_time
 
     def _action(self):
-        if self.action_idx < len(self.steps):
-            print(f'{self.name}: action {self.action_idx}')
-            [action() for action in self.steps[self.action_idx]]
-            self.action_idx += 1
+        if self.step_idx < len(self.steps):
+            print(f'{self.name}: step {self.step_idx}')
+            actions, await_time = self.steps[self.step_idx]
+            [action() for action in actions]
+            self.step_idx += 1
+            self.next_ms = self._get_next_ms(await_time)
             return False
         return True
 
@@ -94,9 +92,8 @@ class Action:
 class LookLeft(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            [head.face_left, eyes.look_left],
-            [self.wait], 
-            [head.face_ahead, eyes.look_ahead], 
+            ([head.face_left, eyes.look_left], 600),
+            ([head.face_ahead, eyes.look_ahead], 600), 
         ]
         super().__init__('Look Left', head, eyes, sound, steps)
 
@@ -104,9 +101,8 @@ class LookLeft(Action):
 class LookRight(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            [head.face_right, eyes.look_right], 
-            [self.wait], 
-            [head.face_ahead, eyes.look_ahead], 
+            ([head.face_right, eyes.look_right], 600),
+            ([head.face_ahead, eyes.look_ahead], 600),
         ]
         super().__init__('Look Right', head, eyes, sound, steps)
 
@@ -114,9 +110,8 @@ class LookRight(Action):
 class LookUp(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            [head.face_up, eyes.look_up, eyes.full_open_eyes],
-            [self.wait], 
-            [head.face_level, eyes.look_ahead, eyes.open_eyes], 
+            ([head.face_up, eyes.look_up, eyes.full_open_eyes], 600),
+            ([head.face_level, eyes.look_ahead, eyes.open_eyes], 600), 
         ]
         super().__init__('Look Up', head, eyes, sound, steps)
 
@@ -124,9 +119,8 @@ class LookUp(Action):
 class LookDown(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            [head.face_down, eyes.look_down],
-            [self.wait], 
-            [head.face_level, eyes.look_ahead, eyes.open_eyes], 
+            ([head.face_down, eyes.look_down], 600),
+            ([head.face_level, eyes.look_ahead, eyes.open_eyes], 600),
         ]
         super().__init__('Look Down', head, eyes, sound, steps)
 
@@ -134,8 +128,7 @@ class LookDown(Action):
 class Tilt(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            [self.tilt],
-            [self.wait],
+            ([self.tilt], 600),
         ]
         super().__init__('Tilt', head, eyes, sound, steps)
 
@@ -154,46 +147,32 @@ class Tilt(Action):
 class Sleep(Action):
     def __init__(self, head, eyes, sound, blink=False):
         steps=[
-            [head.face_down, eyes.close_eyes], 
-            [self.wait], 
-            [head.face_ahead, eyes.open_eyes],
-            [sound.hello],
+            ([head.face_down, eyes.close_eyes], 5000), 
+            ([head.face_ahead, eyes.open_eyes], 100),
+            ([sound.hello], 10),
         ]
         super().__init__('Sleep', head, eyes, sound, steps)
-
-    def wait(self):
-        sleep_ms(5000)
 
 
 class CrossEyed(Action):
     def __init__(self, head, eyes, sound, blink=False):
         steps=[
-            [head.face_ahead, eyes.cross_eyed],
-            [sound.raspberry],
-            [self.wait], 
-            [head.face_ahead, eyes.look_ahead], 
+            ([head.face_ahead, eyes.cross_eyed], 100),
+            ([sound.raspberry], 500),
+            ([head.face_ahead, eyes.look_ahead], 600),
         ]
         super().__init__('Cross Eyed', head, eyes, sound, steps)
-
-    def wait(self):
-        sleep_ms(500)
 
 
 class Shifty(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            [head.face_level], 
-            [self.wait], 
-            [eyes.look_left], 
-            [self.wait], 
-            [eyes.look_right], 
-            [self.wait], 
-            [eyes.look_ahead], 
+            ([head.face_level], 600),
+            ([eyes.look_left], 200),
+            ([eyes.look_right], 200),
+            ([eyes.look_ahead], 600), 
         ]
         super().__init__('Shifty', head, eyes, sound, steps)
-
-    def wait(self):
-        sleep_ms(100)
 
 
 if __name__ == '__main__':

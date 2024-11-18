@@ -35,7 +35,7 @@ class Robot:
                         self.led_panel.pulse()
                         tracking = self.tracker.pulse()
                         if not tracking:
-                            self.run_actions()
+                            self.actions.pulse()
                     else:
                         print(f'Overheating: {cpu_temperature:.2f}')
                         self.led_panel.stop()
@@ -45,10 +45,6 @@ class Robot:
             except KeyboardInterrupt:
                 break 
         self.shutdown()
-
-    def run_actions(self):
-        self.actions.pulse()
-        self._pulse_delay()
 
     def shutdown(self):
         print(f'\nShutting down')
@@ -65,10 +61,6 @@ class Robot:
     def _button_pressed(self):
         print(f'temperature={self._get_cpu_temperature():.2f}C')
         self._toggle_standby()
-
-    @staticmethod
-    def _pulse_delay():
-        sleep_ms(1)
 
     @staticmethod
     def _get_cpu_temperature():
