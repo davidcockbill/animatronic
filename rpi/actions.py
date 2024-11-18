@@ -26,10 +26,6 @@ class Actions:
         if done:
             self.action = self._get_action()
 
-    def shutdown(self):
-        self.head.reset()
-        self.eyes.reset()
-
     @staticmethod
     def _blink_timestamp():
         return ms_timestamp() + randrange(1000, 8000)
@@ -47,7 +43,7 @@ class Actions:
             LookDown(self.head, self.eyes, self.sound),
             Sleep(self.head, self.eyes, self.sound),
             Shifty(self.head, self.eyes, self.sound),
-            Awake(self.head, self.eyes, self.sound),
+            Tilt(self.head, self.eyes, self.sound),
             LookUp(self.head, self.eyes, self.sound),
             CrossEyed(self.head, self.eyes, self.sound),
         ]
@@ -124,6 +120,7 @@ class LookUp(Action):
         ]
         super().__init__('Look Up', head, eyes, sound, steps)
 
+
 class LookDown(Action):
     def __init__(self, head, eyes, sound):
         steps=[
@@ -131,17 +128,16 @@ class LookDown(Action):
             [self.wait], 
             [head.face_level, eyes.look_ahead, eyes.open_eyes], 
         ]
-        super().__init__('Look Up', head, eyes, sound, steps)
+        super().__init__('Look Down', head, eyes, sound, steps)
 
 
-class Awake(Action):
+class Tilt(Action):
     def __init__(self, head, eyes, sound):
         steps=[
             [self.tilt],
-            [self.awake],
-            [head.face_level],
+            [self.wait],
         ]
-        super().__init__('Awake', head, eyes, sound, steps)
+        super().__init__('Tilt', head, eyes, sound, steps)
 
     def tilt(self):
         population=[
@@ -154,18 +150,14 @@ class Awake(Action):
         weights = [weight for i in range(len(population))]
         choices(population, weights, k=1)[0]()
 
-    def awake(self):
-        for blinks in range(randrange(1, 5)):
-            sleep_ms(randrange(500,5000))
-            self.eyes.blink()
-
 
 class Sleep(Action):
     def __init__(self, head, eyes, sound, blink=False):
         steps=[
             [head.face_down, eyes.close_eyes], 
             [self.wait], 
-            [head.face_ahead, eyes.open_eyes], 
+            [head.face_ahead, eyes.open_eyes],
+            [sound.hello],
         ]
         super().__init__('Sleep', head, eyes, sound, steps)
 

@@ -13,6 +13,7 @@ from utils import sleep_ms
 
 class Robot:
     def __init__(self):
+        self.standby = True
         self.led_panel = LedPanel()
         self.button = Button(self._button_pressed)
         self.sound = Sound()
@@ -26,18 +27,21 @@ class Robot:
     def run(self):
         while True:
             try:
-                cpu_temperature = self._get_cpu_temperature()
-                if cpu_temperature < 80:
-                    self.led_panel.pulse()
-                    tracking = self.tracker.pulse()
-                    if not tracking:
-                        self.run_actions()
+                if self.standby:
+                    sleep_ms(250)
                 else:
-                    print(f'Overheating: {cpu_temperature:.2f}')
-                    self.led_panel.stop()
-                    self.led_panel.red(True)
-                    self.sound.no()
-                    sleep_ms(5000)
+                    cpu_temperature = self._get_cpu_temperature()
+                    if cpu_temperature < 80:
+                        self.led_panel.pulse()
+                        tracking = self.tracker.pulse()
+                        if not tracking:
+                            self.run_actions()
+                    else:
+                        print(f'Overheating: {cpu_temperature:.2f}')
+                        self.led_panel.stop()
+                        self.led_panel.red(True)
+                        self.sound.no()
+                        sleep_ms(5000)
             except KeyboardInterrupt:
                 break 
         self.shutdown()
@@ -49,11 +53,18 @@ class Robot:
     def shutdown(self):
         print(f'\nShutting down')
         self.tracker.shutdown()
-        self.actions.shutdown()
         self.led_panel.stop()
+
+    def _toggle_standby(self):
+        if self.standby:
+            self.standby = False
+        else:
+            self.standby = True
+        print(f'Standby: {self.standby}')
 
     def _button_pressed(self):
         print(f'temperature={self._get_cpu_temperature():.2f}C')
+        self._toggle_standby()
 
     @staticmethod
     def _pulse_delay():
