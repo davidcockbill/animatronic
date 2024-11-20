@@ -41,7 +41,7 @@ class Actions:
             LookRight(self.head, self.eyes, self.sound),
             LookUp(self.head, self.eyes, self.sound),
             LookDown(self.head, self.eyes, self.sound),
-            # Sleep(self.head, self.eyes, self.sound),
+            Sleep(self.head, self.eyes, self.sound),
             Shifty(self.head, self.eyes, self.sound),
             Tilt(self.head, self.eyes, self.sound),
             LookUp(self.head, self.eyes, self.sound),
@@ -92,8 +92,8 @@ class Action:
 class LookLeft(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            ([head.face_left, eyes.look_left], 600),
-            ([head.face_ahead, eyes.look_ahead], 600), 
+            ([head.face_left, eyes.look_left], 1000),
+            ([head.face_ahead, eyes.look_ahead], 200), 
         ]
         super().__init__('Look Left', head, eyes, sound, steps)
 
@@ -101,8 +101,8 @@ class LookLeft(Action):
 class LookRight(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            ([head.face_right, eyes.look_right], 600),
-            ([head.face_ahead, eyes.look_ahead], 600),
+            ([head.face_right, eyes.look_right], 1000),
+            ([head.face_ahead, eyes.look_ahead], 200),
         ]
         super().__init__('Look Right', head, eyes, sound, steps)
 
@@ -110,8 +110,8 @@ class LookRight(Action):
 class LookUp(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            ([head.face_up, eyes.look_up, eyes.full_open_eyes], 600),
-            ([head.face_level, eyes.look_ahead, eyes.open_eyes], 600), 
+            ([head.face_up, eyes.look_up, eyes.full_open_eyes], 1000),
+            ([head.face_level, eyes.look_ahead, eyes.open_eyes], 200), 
         ]
         super().__init__('Look Up', head, eyes, sound, steps)
 
@@ -119,8 +119,8 @@ class LookUp(Action):
 class LookDown(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            ([head.face_down, eyes.look_down], 600),
-            ([head.face_level, eyes.look_ahead, eyes.open_eyes], 600),
+            ([head.face_down, eyes.look_down], 1000),
+            ([head.face_level, eyes.look_ahead, eyes.open_eyes], 200),
         ]
         super().__init__('Look Down', head, eyes, sound, steps)
 
@@ -136,7 +136,6 @@ class Tilt(Action):
         population=[
             self.head.tilt_left,
             self.head.tilt_right,
-            self.head.face_level,
             ]
         
         weight = 1.0 / len(population)
@@ -158,8 +157,8 @@ class CrossEyed(Action):
     def __init__(self, head, eyes, sound, blink=False):
         steps=[
             ([head.face_ahead, eyes.cross_eyed], 100),
-            ([sound.raspberry], 500),
-            ([head.face_ahead, eyes.look_ahead], 600),
+            ([sound.raspberry], 1000),
+            ([head.face_ahead, eyes.look_ahead], 200),
         ]
         super().__init__('Cross Eyed', head, eyes, sound, steps)
 
@@ -167,10 +166,10 @@ class CrossEyed(Action):
 class Shifty(Action):
     def __init__(self, head, eyes, sound):
         steps=[
-            ([head.face_level], 600),
+            ([head.face_level], 500),
             ([eyes.look_left], 200),
             ([eyes.look_right], 200),
-            ([eyes.look_ahead], 600), 
+            ([eyes.look_ahead], 500), 
         ]
         super().__init__('Shifty', head, eyes, sound, steps)
 

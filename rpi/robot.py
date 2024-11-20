@@ -9,7 +9,7 @@ from head import Head
 from eyes import Eyes
 from face_tracker import FaceTracker
 from actions import Actions
-from utils import sleep_ms
+from utils import sleep_ms, get_cpu_temperature
 
 class Robot:
     def __init__(self):
@@ -31,7 +31,7 @@ class Robot:
                 if self.standby:
                     self.led_panel.pulse()
                 else:
-                    cpu_temperature = self._get_cpu_temperature()
+                    cpu_temperature = get_cpu_temperature()
                     if cpu_temperature < 80:
                         self.led_panel.pulse()
                         tracking = self.tracker.pulse()
@@ -62,14 +62,8 @@ class Robot:
         print(f'Standby: {self.standby}')
 
     def _button_pressed(self):
-        print(f'temperature={self._get_cpu_temperature():.2f}C')
+        print(f'temperature={get_cpu_temperature():.2f}C')
         self._toggle_standby()
-
-    @staticmethod
-    def _get_cpu_temperature():
-        with open('/sys/class/thermal/thermal_zone0/temp', 'r') as temp_file:
-            cpu_temperature = temp_file.read()
-        return float(cpu_temperature) / 1000
 
 
 if __name__ == '__main__':
