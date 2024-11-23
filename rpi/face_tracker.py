@@ -14,7 +14,7 @@ class FaceTracker:
         self.sound = context.sound
         self.head = context.head
         self.eyes = context.eyes
-        self.detector = FaceDetector()
+        self.detector = FaceDetector(context.capture)
         self.next_check_ms = 0
         self.last_face_detected = 0
         self.face_tracking = False

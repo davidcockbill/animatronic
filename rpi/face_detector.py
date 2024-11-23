@@ -11,10 +11,10 @@ FRONTAL_CLASSIFIER_FILE = f'{ROOT}/haarcascade_frontalface_default.xml'
 PROFILE_CLASSIFIER_FILE = f'{ROOT}/haarcascade_profileface.xml'
 
 class FaceDetector:
-    def __init__(self):
+    def __init__(self, capture):
         self.cascade_frontal = cv2.CascadeClassifier(FRONTAL_CLASSIFIER_FILE)
         self.cascade_profile = cv2.CascadeClassifier(PROFILE_CLASSIFIER_FILE)
-        self.capture = VideoStream(usePiCamera=True).start()
+        self.capture = capture
         self.grayscale = True
         self.scale_factor = 1.3
         self.min_neighbors = 5
@@ -61,7 +61,8 @@ class FaceDetector:
 
 
 if __name__ == '__main__':
-    detector = FaceDetector()
+    capture = VideoStream(usePiCamera=True).start()
+    detector = FaceDetector(capture)
 
     print('Running..')
     while True:
