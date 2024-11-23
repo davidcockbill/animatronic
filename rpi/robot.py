@@ -8,7 +8,7 @@ from cmd_proxy import CmdProxy
 from head import Head
 from eyes import Eyes
 from face_tracker import FaceTracker
-from actions import Actions
+from actions import DefaultActions
 from utils import sleep_ms, get_cpu_temperature
 
 class Robot:
@@ -21,7 +21,7 @@ class Robot:
         self.head = Head(self.proxy)
         self.eyes = Eyes(self.proxy)
         self.tracker = FaceTracker(self.led_panel, self.sound, self.head, self.eyes)
-        self.actions = Actions(self.head, self.eyes, self.sound)
+        self.actions = DefaultActions(self.head, self.eyes, self.sound)
         self.led_panel.red_flash()
         sleep_ms(500)
 

@@ -9,11 +9,14 @@ from head import Head
 from eyes import Eyes
 
 class Actions:
-    def __init__(self, head, eyes, sound):
+    def __init__(self, head, eyes, sound, actions):
         self.head = head
         self.eyes = eyes
         self.sound = sound
         self.blink_timestamp = Actions._blink_timestamp()
+        self.random_action = True
+        self.actions = actions
+        self.action_idx = 0
         self.reset()
 
     def reset(self):
@@ -36,22 +39,37 @@ class Actions:
             self.blink_timestamp = Actions._blink_timestamp()
 
     def _get_action(self):
-        population=[
-            LookLeft(self.head, self.eyes, self.sound),
-            LookRight(self.head, self.eyes, self.sound),
-            LookUp(self.head, self.eyes, self.sound),
-            LookDown(self.head, self.eyes, self.sound),
-            Sleep(self.head, self.eyes, self.sound),
-            Shifty(self.head, self.eyes, self.sound),
-            Tilt(self.head, self.eyes, self.sound),
-            LookUp(self.head, self.eyes, self.sound),
-            CrossEyed(self.head, self.eyes, self.sound),
-        ]
-        
+        if self.random_action:
+            return self._get_random_action()
+        return self._get_sequential_action()
+
+    def _get_random_action(self):
+        population = self.actions
         weight = 1.0 / len(population)
         weights = [weight for i in range(len(population))]
         return choices(population, weights, k=1)[0]
+    
+    def _get_sequential_action(self):
+        action = self.actions[self.action_idx]
+        self.action_idx += 1
+        self.action_idx %= len(self.actions)
+        return action
 
+
+class DefaultActions(Actions):
+    def __init__(self, head, eyes, sound):
+        actions = [
+            LookLeft(head, eyes, sound),
+            LookRight(head, eyes, sound),
+            LookUp(head, eyes, sound),
+            LookDown(head, eyes, sound),
+            Sleep(head, eyes, sound),
+            Shifty(head, eyes, sound),
+            Tilt(head, eyes, sound),
+            LookUp(head, eyes, sound),
+            CrossEyed(head, eyes, sound),
+        ]
+        super().__init__(head, eyes, sound, actions)
 
 class Action:
     def __init__(self, name, head, eyes, sound, steps, blink=True):
@@ -86,6 +104,7 @@ class Action:
             self.step_idx += 1
             self.next_ms = self._get_next_ms(await_time)
             return False
+        self.step_idx = 0
         return True
 
 
