@@ -3,6 +3,7 @@
 from face_detector import FaceDetector
 from random import randrange
 from utils import ms_timestamp
+from context import Context
 
 HEAD_SMOOTHER = 100
 CHECK_TIME = 500
@@ -93,4 +94,5 @@ class FaceTracker:
 
 
 if __name__ == '__main__':
-    tracker = FaceTracker()
+    context = Context()
+    tracker = FaceTracker(context)

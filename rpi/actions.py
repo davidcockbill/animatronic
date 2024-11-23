@@ -3,6 +3,7 @@
 from utils import ms_timestamp
 from random import randrange, choices
 
+from context import Context
 
 class Actions:
     def __init__(self, context, actions, random=True):
@@ -194,6 +195,7 @@ class CrossEyed(Action):
     def __init__(self, context, blink=False):
         head = context.head
         eyes = context.eyes
+        sound = context.sound
         steps=[
             ([head.face_ahead, eyes.cross_eyed], 100),
             ([sound.raspberry], 1000),
@@ -216,10 +218,7 @@ class Shifty(Action):
 
 
 if __name__ == '__main__':
-    sound = Sound()
-    proxy = CmdProxy()
-    head = Head(proxy)
-    eyes = Eyes(proxy)
-    actions = Actions(head, eyes, sound)
+    context = Context()
+    actions = DefaultActions(context)
     while True:
         actions.pulse()
