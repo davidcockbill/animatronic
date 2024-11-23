@@ -17,22 +17,25 @@ class Robot:
         sleep_ms(500)
 
     def run(self):
+        led_panel = self.context.led_panel
+        tracker = self.tracker
+        sound = self.context.sound
         while True:
             try:
                 if self.standby:
-                    self.context.led_panel.pulse()
+                    led_panel.pulse()
                 else:
                     cpu_temperature = get_cpu_temperature()
                     if cpu_temperature < 80:
-                        self.context.led_panel.pulse()
-                        tracking = self.tracker.pulse()
+                        led_panel.pulse()
+                        tracking = tracker.pulse()
                         if not tracking:
                             self.actions.pulse()
                     else:
                         print(f'Overheating: {cpu_temperature:.2f}')
-                        self.context.led_panel.stop()
-                        self.context.led_panel.red(True)
-                        self.context.sound.no()
+                        led_panel.stop()
+                        led_panel.red(True)
+                        sound.no()
                         sleep_ms(5000)
             except KeyboardInterrupt:
                 break 
@@ -44,11 +47,12 @@ class Robot:
         self.context.led_panel.stop()
 
     def _toggle_standby(self):
+        led_panel = self.context.led_panel
         if self.standby:
-            self.context.led_panel.scan()
+            led_panel.scan()
             self.standby = False
         else:
-            self.context.led_panel.red_flash()
+            led_panel.red_flash()
             self.standby = True
         print(f'Standby: {self.standby}')
 
