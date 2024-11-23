@@ -3,19 +3,13 @@
 from utils import ms_timestamp
 from random import randrange, choices
 
-from sound import Sound
-from cmd_proxy import CmdProxy
-from head import Head
-from eyes import Eyes
 
 class Actions:
-    def __init__(self, head, eyes, sound, actions, random=True):
-        self.head = head
-        self.eyes = eyes
-        self.sound = sound
+    def __init__(self, context, actions, random=True):
+        self.context = context
         self.blink_timestamp = Actions._blink_timestamp()
-        self.random_action = random
         self.actions = actions
+        self.random_action = random
         self.action_idx = 0
         self.reset()
 
@@ -35,7 +29,7 @@ class Actions:
 
     def _blink(self):
         if ms_timestamp() > self.blink_timestamp:
-            self.eyes.blink()
+            self.context.eyes.blink()
             self.blink_timestamp = Actions._blink_timestamp()
 
     def _get_action(self):
@@ -57,26 +51,37 @@ class Actions:
 
 
 class DefaultActions(Actions):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context):
         actions = [
-            LookLeft(head, eyes, sound),
-            LookRight(head, eyes, sound),
-            LookUp(head, eyes, sound),
-            LookDown(head, eyes, sound),
-            Sleep(head, eyes, sound),
-            Shifty(head, eyes, sound),
-            Tilt(head, eyes, sound),
-            LookUp(head, eyes, sound),
-            CrossEyed(head, eyes, sound),
+            LookLeft(context),
+            LookRight(context),
+            LookUp(context),
+            LookDown(context),
+            Sleep(context),
+            Shifty(context),
+            Tilt(context),
+            LookUp(context),
+            CrossEyed(context),
         ]
-        super().__init__(head, eyes, sound, actions)
+        super().__init__(context, actions)
+
+
+class SleeperActions(Actions):
+    def __init__(self, context):
+        actions = [
+            Sleep(context),
+            Tilt(context),
+            Shifty(context),
+        ]
+        super().__init__(context, actions, False)
+
 
 class Action:
-    def __init__(self, name, head, eyes, sound, steps, blink=True):
+    def __init__(self, name, context, steps, blink=True):
         self.name = name
-        self.head = head
-        self.eyes = eyes
-        self.sound = sound
+        self.head = context.head
+        self.eyes = context.eyes
+        self.sound = context.sound
         self.step_idx = 0
         self.steps = steps
         self.blink = blink
@@ -109,47 +114,57 @@ class Action:
 
 
 class LookLeft(Action):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context):
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([head.face_left, eyes.look_left], 1000),
             ([head.face_ahead, eyes.look_ahead], 200), 
         ]
-        super().__init__('Look Left', head, eyes, sound, steps)
+        super().__init__('Look Left', context, steps)
 
 
 class LookRight(Action):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context):
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([head.face_right, eyes.look_right], 1000),
             ([head.face_ahead, eyes.look_ahead], 200),
         ]
-        super().__init__('Look Right', head, eyes, sound, steps)
+        super().__init__('Look Right', context, steps)
 
 
 class LookUp(Action):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context):
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([head.face_up, eyes.look_up, eyes.full_open_eyes], 1000),
             ([head.face_level, eyes.look_ahead, eyes.open_eyes], 200), 
         ]
-        super().__init__('Look Up', head, eyes, sound, steps)
+        super().__init__('Look Up', context, steps)
 
 
 class LookDown(Action):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context):
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([head.face_down, eyes.look_down], 1000),
             ([head.face_level, eyes.look_ahead, eyes.open_eyes], 200),
         ]
-        super().__init__('Look Down', head, eyes, sound, steps)
+        super().__init__('Look Down', context, steps)
 
 
 class Tilt(Action):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context): 
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([self.tilt], 600),
         ]
-        super().__init__('Tilt', head, eyes, sound, steps)
+        super().__init__('Tilt', context, steps)
 
     def tilt(self):
         population=[
@@ -163,34 +178,41 @@ class Tilt(Action):
 
 
 class Sleep(Action):
-    def __init__(self, head, eyes, sound, blink=False):
+    def __init__(self, context, blink=False):
+        head = context.head
+        eyes = context.eyes
+        sound = context.sound
         steps=[
             ([head.face_down, eyes.close_eyes], 5000), 
             ([head.face_ahead, eyes.open_eyes], 100),
             ([sound.hello], 10),
         ]
-        super().__init__('Sleep', head, eyes, sound, steps)
+        super().__init__('Sleep', context, steps)
 
 
 class CrossEyed(Action):
-    def __init__(self, head, eyes, sound, blink=False):
+    def __init__(self, context, blink=False):
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([head.face_ahead, eyes.cross_eyed], 100),
             ([sound.raspberry], 1000),
             ([head.face_ahead, eyes.look_ahead], 200),
         ]
-        super().__init__('Cross Eyed', head, eyes, sound, steps)
+        super().__init__('Cross Eyed', context, steps)
 
 
 class Shifty(Action):
-    def __init__(self, head, eyes, sound):
+    def __init__(self, context):
+        head = context.head
+        eyes = context.eyes
         steps=[
             ([head.face_level], 500),
             ([eyes.look_left], 200),
             ([eyes.look_right], 200),
             ([eyes.look_ahead], 500), 
         ]
-        super().__init__('Shifty', head, eyes, sound, steps)
+        super().__init__('Shifty', context, steps)
 
 
 if __name__ == '__main__':

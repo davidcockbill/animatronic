@@ -8,11 +8,11 @@ HEAD_SMOOTHER = 100
 CHECK_TIME = 500
 
 class FaceTracker:
-    def __init__(self, led_panel, sound, head, eyes):
-        self.led_panel = led_panel
-        self.sound = sound
-        self.head = head
-        self.eyes = eyes
+    def __init__(self, context):
+        self.led_panel = context.led_panel
+        self.sound = context.sound
+        self.head = context.head
+        self.eyes = context.eyes
         self.detector = FaceDetector()
         self.next_check_ms = 0
         self.last_face_detected = 0
