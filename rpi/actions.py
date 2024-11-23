@@ -9,12 +9,12 @@ from head import Head
 from eyes import Eyes
 
 class Actions:
-    def __init__(self, head, eyes, sound, actions):
+    def __init__(self, head, eyes, sound, actions, random=True):
         self.head = head
         self.eyes = eyes
         self.sound = sound
         self.blink_timestamp = Actions._blink_timestamp()
-        self.random_action = True
+        self.random_action = random
         self.actions = actions
         self.action_idx = 0
         self.reset()
