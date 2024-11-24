@@ -7,8 +7,8 @@ from utils import sleep_ms, get_cpu_temperature
 
 
 class MotionDetector:
-    def __init__(self):
-        self.capture = VideoStream(usePiCamera=True).start()
+    def __init__(self, capture):
+        self.capture = capture
         self.last_mean = 0
         sleep_ms(500)
 
@@ -22,7 +22,8 @@ class MotionDetector:
 
 
 if __name__ == '__main__':
-    detector = MotionDetector()
+    capture = VideoStream(usePiCamera=True).start()
+    detector = MotionDetector(capture)
 
     print('Running ...')
     count = 0

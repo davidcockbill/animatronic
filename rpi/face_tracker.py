@@ -29,12 +29,12 @@ class FaceTracker:
         self.detector.shutdown()
 
     def pulse(self):
-        self._blink()
         current_ms = ms_timestamp()
         if self.face_tracking or current_ms > self.next_check_ms:
             self.next_check_ms = current_ms + CHECK_TIME
             face = self.detector.get_face()
             if face is not None:
+                self._blink()
                 self.led_panel.blue(True)
                 self.last_face_detected = current_ms
                 if not self.face_tracking:

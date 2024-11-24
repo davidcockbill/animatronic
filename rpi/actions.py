@@ -4,6 +4,7 @@ from utils import ms_timestamp
 from random import randrange, choices
 
 from context import Context
+from motion import MotionDetector
 
 class Actions:
     def __init__(self, context, actions, random=True):
@@ -42,39 +43,39 @@ class Actions:
         population = self.actions
         weight = 1.0 / len(population)
         weights = [weight for i in range(len(population))]
-        return choices(population, weights, k=1)[0]
+        return choices(population, weights, k=1)[0](self.context)
     
     def _get_sequential_action(self):
         action = self.actions[self.action_idx]
         self.action_idx += 1
         self.action_idx %= len(self.actions)
-        return action
+        return action(self.context)
 
 
 class DefaultActions(Actions):
     def __init__(self, context):
         actions = [
-            LookLeft(context),
-            LookRight(context),
-            LookUp(context),
-            LookDown(context),
-            Sleep(context),
-            Shifty(context),
-            Tilt(context),
-            LookUp(context),
-            CrossEyed(context),
+            LookLeft,
+            LookRight,
+            LookUp,
+            LookDown,
+            Sleep,
+            Shifty,
+            Tilt,
+            LookUp,
+            CrossEyed,
         ]
-        super().__init__(context, actions)
+        super().__init__(context, actions, random=True)
 
 
 class SleeperActions(Actions):
     def __init__(self, context):
         actions = [
-            Sleep(context),
-            Tilt(context),
-            Shifty(context),
+            Sleep,
+            Tilt,
+            Shifty,
         ]
-        super().__init__(context, actions, False)
+        super().__init__(context, actions, random=False)
 
 
 class Action:
@@ -179,20 +180,39 @@ class Tilt(Action):
 
 
 class Sleep(Action):
-    def __init__(self, context, blink=False):
-        head = context.head
-        eyes = context.eyes
-        sound = context.sound
-        steps=[
-            ([head.face_down, eyes.close_eyes], 5000), 
-            ([head.face_ahead, eyes.open_eyes], 100),
-            ([sound.hello], 10),
-        ]
-        super().__init__('Sleep', context, steps)
+    def __init__(self, context):
+        self.context = context
+        self.detector = MotionDetector(context.capture)
+        super().__init__('Sleep', context, [], blink=False)
+        self._sleep()
+        print('Sleeping...')
+    
+    def pulse(self):
+        done = False
+        current_ms = ms_timestamp()
+        if current_ms > self.next_ms:
+            motion = self.detector.check_motion()
+            if motion:
+                self._awake()
+                done = True
+        else:
+            self.detector.check_motion()
+        return done
+
+    def _sleep(self):
+        self.context.head.face_down()
+        self.context.eyes.close_eyes()
+        self.next_ms = self._get_next_ms(2000)
+
+    def _awake(self):
+        print('Waking up...')
+        self.context.eyes.open_eyes()
+        self.context.head.face_ahead()
+        self.sound.hello()
 
 
 class CrossEyed(Action):
-    def __init__(self, context, blink=False):
+    def __init__(self, context):
         head = context.head
         eyes = context.eyes
         sound = context.sound
@@ -201,7 +221,7 @@ class CrossEyed(Action):
             ([sound.raspberry], 1000),
             ([head.face_ahead, eyes.look_ahead], 200),
         ]
-        super().__init__('Cross Eyed', context, steps)
+        super().__init__('Cross Eyed', context, steps, blink=False)
 
 
 class Shifty(Action):
@@ -219,6 +239,6 @@ class Shifty(Action):
 
 if __name__ == '__main__':
     context = Context()
-    actions = DefaultActions(context)
+    actions = SleeperActions(context)
     while True:
         actions.pulse()
